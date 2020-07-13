@@ -3,6 +3,7 @@ package com.example.demo.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskTimeoutException;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +18,8 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.server.ui.LoginPageGeneratingWebFilter;
 
 import static com.example.demo.security.ApplicationUserRole.*;
+
+import java.util.concurrent.TimeUnit;
 
 
 @Configuration
@@ -49,14 +52,27 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 		    .authenticated()
 		    .and()
 		    .formLogin()
-		  .loginPage("/login").permitAll()
-		  .defaultSuccessUrl("/courses",true)
-		  .and()
-		  .rememberMe();//defaults to 2 weeks
+            .loginPage("/login")
+            .permitAll()
+            .defaultSuccessUrl("/courses", true)
+            .passwordParameter("password")
+            .usernameParameter("username")
+        .and()
+        .rememberMe()
+            .tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(21))
+            .key("somethingverysecured")
+            .rememberMeParameter("remember-me")
+        .and()
+        .logout()
+            .logoutUrl("/logout")
+           // .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) // https://docs.spring.io/spring-security/site/docs/4.2.12.RELEASE/apidocs/org/springframework/security/config/annotation/web/configurers/LogoutConfigurer.html
+            .clearAuthentication(true)
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID", "remember-me")
+            .logoutSuccessUrl("/login");
+}
 		
 		    
-		
-	}
 	@Override
     @Bean
     protected UserDetailsService userDetailsService() {
