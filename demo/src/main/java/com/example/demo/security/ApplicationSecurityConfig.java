@@ -71,7 +71,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
             .invalidateHttpSession(true)
             .deleteCookies("JSESSIONID", "remember-me")
             .logoutSuccessUrl("/login");
-}
+}//
 	
 	 @Override
 	    protected void configure(AuthenticationManagerBuilder auth) throws Exception {

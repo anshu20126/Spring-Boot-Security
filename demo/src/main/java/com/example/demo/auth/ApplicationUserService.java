@@ -25,4 +25,4 @@ public class ApplicationUserService implements UserDetailsService {
                         new UsernameNotFoundException(String.format("Username %s not found", username))
                 );
     }
-}
+}//
