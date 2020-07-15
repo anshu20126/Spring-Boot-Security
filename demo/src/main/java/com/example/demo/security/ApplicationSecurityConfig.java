@@ -10,12 +10,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.concurrent.TimeUnit;
 
 import static com.example.demo.security.ApplicationUserRole.*;
+
+import java.util.concurrent.TimeUnit;
 
 
 
@@ -73,7 +76,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
             .logoutSuccessUrl("/login");
 }//
 	
-	 @Override
+	@Override
 	    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 	        auth.authenticationProvider(daoAuthenticationProvider());
 	    }
@@ -88,6 +91,26 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 		    
 	
 	/*@Override
+=======
+			  .loginPage("/login").permitAll()
+			  .defaultSuccessUrl("/courses",true)
+			  .and()
+			  .rememberMe()
+			        .tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(21))
+                    .key("somethingverysecured")
+                    .and()
+                    .logout()
+                        .logoutUrl("/logout")
+                       // .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) // https://docs.spring.io/spring-security/site/docs/4.2.12.RELEASE/apidocs/org/springframework/security/config/annotation/web/configurers/LogoutConfigurer.html
+                        .clearAuthentication(true)
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID", "remember-me")
+                        .logoutSuccessUrl("/login");
+		    
+		
+	}
+	@Override
+>>>>>>> Form_Based_Authentication
     @Bean
     protected UserDetailsService userDetailsService() {
 		UserDetails annaSmithUser = User.builder()
